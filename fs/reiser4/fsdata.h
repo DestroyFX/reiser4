@@ -189,7 +189,7 @@ struct d_cursor_info {
 };
 
 /* spinlock protecting readdir cursors */
-extern struct lockref d_lockref;
+extern spinlock_t x_lock;
 
 /* __REISER4_FSDATA_H__ */
 #endif
