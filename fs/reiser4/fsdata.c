@@ -50,6 +50,7 @@ static unsigned long d_cursor_shrink_scan(struct shrinker *shrink, struct shrink
 		}
 		spin_unlock(&d_c_lock);
 	}
+	sc->nr_to_scan = 0;
 	return freed;
 }
 
