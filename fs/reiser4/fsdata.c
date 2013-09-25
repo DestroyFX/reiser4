@@ -67,7 +67,6 @@ static unsigned long d_cursor_shrink_count (struct shrinker *shrink, struct shri
  * shrunk only if system is really tight on memory.
  */
 static struct shrinker d_cursor_shrinker = {
-	.shrink = d_cursor_shrink,
 	.count_objects = d_cursor_shrink_count,
 	.scan_objects = d_cursor_shrink_scan,
 	.seeks = DEFAULT_SEEKS << 3,
