@@ -151,8 +151,11 @@ int reiser4_link_common(struct dentry *existing, struct inode *parent,
 	assert("nikita-1434", object != NULL);
 
 	/* check for race with create_object() */
-	reiser4_check_immutable(object);
-
+	if (reiser4_inode_get_flag(object, REISER4_IMMUTABLE)) {
+		context_set_commit_async(ctx);
+		reiser4_exit_context(ctx);
+		return RETERR(-E_REPEAT);
+	}
 	parent_dplug = inode_dir_plugin(parent);
 
 	memset(&entry, 0, sizeof entry);
@@ -876,7 +879,8 @@ static int unlink_check_and_grab(struct inode *parent, struct dentry *victim)
 	fplug = inode_file_plugin(child);
 
 	/* check for race with create_object() */
-	reiser4_check_immutable(child);
+	if (reiser4_inode_get_flag(child, REISER4_IMMUTABLE))
+		return RETERR(-E_REPEAT);
 
 	/* object being deleted should have stat data */
 	assert("vs-949", !reiser4_inode_get_flag(child, REISER4_NO_SD));
